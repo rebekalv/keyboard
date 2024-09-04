@@ -496,3 +496,52 @@
   }
 
 }
+
+/* Footer CSS */
+.footer__container {
+  background-color: black;
+  padding: 1rem 0 5rem 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: center;
+
+}
+
+.footer__container h2 {
+  margin-bottom: 1rem;
+  background-color: rgb(255, 68, 99);
+  background-image: linear-gradient(to top, purple 0%, rgb(255, 68, 99) 50%,pink 100%);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+  font-size: 2rem;
+}
+
+.footer__items {
+  margin-left: 0.2rem;
+  display: flex;
+  flex-direction: row;
+}
+
+.footer__items p {
+  font-size: 1.5rem;
+  color: white;
+  text-decoration: none;
+  margin-right: 0.3rem;
+}
+
+.footer__items a {
+  font-size: 1.5rem;
+  color: white;
+  text-decoration: none;
+  margin-right: 1rem;
+}
+
+.footer__items a:hover {
+  color: rgb(156, 63, 179);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
