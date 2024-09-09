@@ -26,32 +26,44 @@
                 <li class="navbar__item">
                     <a href="/work.html" class="navbar__links">Work</a>
                 </li>
+                 <!-- Projects in progress
                 <li class="navbar__item">
                     <a href="/" class="navbar__links">Projects</a>
                 </li>
+                -->
                 <li class="navbar__btn">
-                    <a href="/" class="button">Contact Me</a>
+                    <a href="#contact" class="button">Contact Me</a>
                 </li>
             </ul>
         </div>
     </nav>
 
     <!-- Services Section -->
-    <div id="info" class="services">
+    <div class="edu_services">
         <h1>Education</h1>
-        <div class="services__container">
-            <a href="/education.html" class="services__card">
-                <h2>Education</h2>
-                <p>Masters in Computerized Control</p>
-                <p>Specialization in Embedded Systems</p>
-                <button>NTNU University</button>
-            </a>
-            <a href="/work.html" class="services__card">
-                <h2>Work Experience</h2>
-                <p>Microchips</p>
-                <p>3D printing and design</p>
-                <button>Microchip Technology</button>
-            <a>
+        <div class="edu__list">
+            <p>Years 2021-2025</p>
+            <p>Masters in Computerized Control, also called Cybernetics</p>
+            <p>Specialization in Embedded Systems</p>
+        </div>
+        <div class="edu__list">
+            <p>Programming Languages</p>
+            <p>Alot: C, Elixir, React, Matlab </p>
+            <p>Some: html+css+js, VHDL, Python, C++, Assembly</p>
+
+        </div>
+        <a href="https://www.ntnu.no/studier/mttk" class="main__btn">NTNU University</a>
+    </div>
+
+    <!-- Footer Section -->
+    <div id="contact" class="footer__container">
+        <h2>Contact Me</h2>
+        <div class="footer__items">
+            <p>Email:</p>
+            <button onclick="copyMail()" onmouseout="mailOutFunc()">
+                <span class="tooltip" id="mailTooltip"></span>
+                rebekk0607@hotmail.com
+            </button>
         </div>
     </div>
 
