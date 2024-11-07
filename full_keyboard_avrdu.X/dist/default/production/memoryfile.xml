@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<project>                                  
+  <executable name="dist/default/production/full_keyboard_avrdu.X.production.elf">                 
+    <memory name="program">              
+      <units>bytes</units>                 
+      <length>65536</length>                 
+      <used>2288</used>                     
+      <free>63248</free>                     
+    </memory>                              
+    <memory name="data">                 
+      <units>bytes</units>                 
+      <length>8192</length>                 
+      <used>63</used>                     
+      <free>8129</free>                     
+    </memory>                              
+  </executable>                            
+</project>                                 
