@@ -46,45 +46,44 @@
 
 // Button de-bounce variables
 uint64_t milliSeconds = 0;
-uint64_t lastInterruptTime[NUM_ROWS] = {0};
+uint64_t lastInterruptTime[NUM_COLUMNS] = {0};
 
-// USB connection handlers
-void CheckUSBConnection(void);
-void HandleUSBConnection(void);
+// Flags to keep track of key presses
+volatile bool keyPressFlag = false;
+volatile bool columnFlags[NUM_COLUMNS] = {false};
 
 // USB connection variables
 RETURN_CODE_t status;
 uint8_t prevVbusState = 0;
 volatile uint8_t vbusFlag = false;
 
-// USB SOF callback functions, called every 1 ms
-void USB_IterateColumns(void);
-void USB_KeyPressHandler(uint8_t currentColumn);
+// USB connection handlers
+void CheckUSBConnection(void);
+void HandleUSBConnection(void);
 
-// Check rows for key presses
+// USB callback functions, called every 1 ms
 void IterateRows(void);
+void KeyPressHandler(uint8_t currentRow);
+
+// Check columns for key presses
+void IterateColumns(void);
 
 // Helper functions
 void TurnRowOff(uint8_t row);
 void TurnRowOn(uint8_t row);
-uint8_t GetColumnValue(uint8_t column);
-
+uint8_t ColumnIsActive(uint8_t column);
 
 // Key map
-uint8_t keypad[] = {
-    HID_1, HID_2, HID_3, 
-    HID_4, HID_5, HID_6, 
-    HID_7, HID_8, HID_9, 
-    HID_KEYPAD_ASTERISK, HID_0, HID_3,
+uint8_t keyboard[] = {
+    HID_A, HID_B, HID_C, 
+    HID_D, HID_E, HID_F, 
+    HID_G, HID_H, HID_I, 
+    HID_J, HID_K, HID_L,
 };
         
-// Flags to keep track of key presses
-volatile bool keyPressFlag = false;
-volatile bool rowFlags[NUM_ROWS] = {false};
-
 int main(void)
 {
-    USBDevice_StartOfFrameCallbackRegister(USB_IterateColumns); // Called every 1 ms
+    USBDevice_StartOfFrameCallbackRegister(IterateRows); // Called every 1 ms
     SYSTEM_Initialize();
     RTC_SetPITIsrCallback(CheckUSBConnection);
     LED0_SetLow();
@@ -92,58 +91,51 @@ int main(void)
 
     while(1)
     {
-        //HandleUSBConnection();
-        if(COL0_GetValue() == 0){
-            LED0_SetHigh();
-        }
-        else{
-            LED0_SetLow();
-        }
+        HandleUSBConnection();
     }    
 }
 
-void USB_IterateColumns(void)   // Iterates columns to measure key presses at every Start of Frame
+void IterateRows(void)   // Iterates columns to measure key presses at every Start of Frame
 {
-   // static volatile uint8_t activeColumn = 0;
+
+    static volatile uint8_t activeRow = 0;
     // Increase de-bounce counter
-  //  milliSeconds++;
-    //IterateRows();
+    milliSeconds++;
+    IterateColumns();
     // Handle key presses in the activeColumn
-    //SetColumnHigh(activeColumn);
-    //USB_KeyPressHandler(activeColumn);
+    //TurnRowOn(activeRow);
+    KeyPressHandler(activeRow);
     // Next column
-//    SetColumnLow(activeColumn);
-//    activeColumn = (activeColumn+1)%NUM_COLUMNS; 
+    //TurnRowOff(activeRow);
+//    activeRow = (activeRow+1)%NUM_COLUMNS; 
     return;
 }
 
-void USB_KeyPressHandler(uint8_t currentColumn) // Handles key presses
+void KeyPressHandler(uint8_t currentRow) // Handles key presses
 {
-
-//    static volatile bool keyDownFlag = true;
-//    static volatile uint8_t keypadIndex = -1;
-//    static volatile bool modifierFlag = false;
-//    // Detects any key presses
-//    if (keyPressFlag)
-//    {
-//        // Checks if we need the key press down event
-//        if (keyDownFlag)
-//        {
-//            if (modifierFlag == false)
-//            {
-//                // Finds the message_index corresponding to the pressed key
-//                for (uint8_t currentRow = 0; currentRow < NUM_ROWS; currentRow++) {
-//                    if (rowFlags[currentRow]) {
-//                        keypadIndex = currentColumn + currentRow*NUM_COLUMNS;
-//                        rowFlags[currentRow] = false;
-//                        break;
-//                    }
-//                }
-//             
-//            }
+    static volatile bool keyDownFlag = true;
+    static volatile uint8_t keyboardIndex = -1;
+    static volatile bool modifierFlag = false;
+    // Detects any key presses
+    if (keyPressFlag)
+    {
+        // Checks if we need the key press down event
+        if (keyDownFlag)
+        {
+            if (modifierFlag == false)
+            {
+                // Finds the message_index corresponding to the pressed key
+                for (uint8_t currentColumn = 0; currentColumn < NUM_COLUMNS; currentColumn++) {
+                    if (columnFlags[currentColumn]) {
+                        keyboardIndex = currentColumn + currentRow*NUM_COLUMNS;
+                        columnFlags[currentColumn] = false;
+                        break;
+                    }
+                }
+            }
 //           
-//            if (SUCCESS == status)
-//            {
+            if (SUCCESS == status)
+            {
 //                // Used to make exclamation mark at the end of the message
 //                if ((keypadIndex == 11) && (modifierFlag == false))
 //                {
@@ -152,47 +144,45 @@ void USB_KeyPressHandler(uint8_t currentColumn) // Handles key presses
 //                }
 //                else
 //                {
-//                    // Sends the keypress down event
-//                    status = USB_HIDKeyPressDown(keypad[keypadIndex]);
-//                    keyDownFlag = false;
-//                    modifierFlag = false;
+                    // Sends the keypress down event
+                    status = USB_HIDKeyPressDown(keyboard[keyboardIndex]);
+                    keyDownFlag = false;
+                    modifierFlag = false;
 //                }
-//            }
-//        }
-//        else
-//        {
-//            if (SUCCESS == status)
-//            {
-//                // Sends the keypress up event
-//                status = USB_HIDKeyPressUp(keypad[keypadIndex]);
-//                
-//                // Releases the shift key modifier if enabled
-//                USB_HIDKeyModifierUp(HID_MODIFIER_LEFT_SHIFT);
-//
-//                // Resets flags
-//                keyDownFlag = true;
-//                keyPressFlag = false;
-//            }
-//        }
-//    }
-}
-
-void IterateRows(void){
-    uint64_t currentTime = milliSeconds;
-    for (int row=0; row < NUM_ROWS; row++){
-        if (GetRowValue(row)){
-            LED0_Toggle();
-            // Checks if there has been enough time between two equal key presses, to avoid bouncing and fast spamming
-            if (currentTime - lastInterruptTime[row] >= KEY_PRESS_TIME_INTERVAL_MS)
+            }
+        }
+        else
+        {
+            if (SUCCESS == status)
             {
-                lastInterruptTime[row] = currentTime;
-                keyPressFlag = true;
-                rowFlags[row] = true;
+                // Sends the keypress up event
+                status = USB_HIDKeyPressUp(keyboard[keyboardIndex]);
+                
+                // Releases the shift key modifier if enabled
+                USB_HIDKeyModifierUp(HID_MODIFIER_LEFT_SHIFT);
+
+                // Resets flags
+                keyDownFlag = true;
+                keyPressFlag = false;
             }
         }
     }
 }
 
+void IterateColumns(void){
+    uint64_t currentTime = milliSeconds;
+    for (int col=0; col < NUM_COLUMNS; col++){
+        if (ColumnIsActive(col)){
+            // Checks if there has been enough time between two equal key presses, to avoid bouncing and fast spamming
+            if (currentTime - lastInterruptTime[col] >= KEY_PRESS_TIME_INTERVAL_MS)
+            {
+                lastInterruptTime[col] = currentTime;
+                keyPressFlag = true;
+                columnFlags[col] = true;
+            }
+        }
+    }
+}
 
 void HandleUSBConnection(void) {
     // Check if VBUS was true last check, indicating that USB was connected
@@ -285,23 +275,23 @@ void TurnRowOn(uint8_t row) {
         default: ROW0_SetLow(); break;
     }
 }
-uint8_t GetColumnValue(uint8_t column){
+uint8_t ColumnIsActive(uint8_t column){
     switch (column) {
-        case 0:  return COL0_GetValue(); break;
-        case 1:  return COL1_GetValue(); break;
-        case 2:  return COL2_GetValue(); break;
-        case 3:  return COL3_GetValue(); break;
-        case 4:  return COL4_GetValue(); break;
-        case 5:  return COL5_GetValue(); break;
-        case 6:  return COL6_GetValue(); break;
-        case 7:  return COL7_GetValue(); break;
-        case 8:  return COL8_GetValue(); break;
-        case 9:  return COL9_GetValue(); break;
-        case 10: return COL10_GetValue(); break;
-        case 11: return COL11_GetValue(); break;
-        case 12: return COL12_GetValue(); break;
-        case 13: return COL13_GetValue(); break;
-        case 14: return COL14_GetValue(); break;
-        default: return COL0_GetValue(); break;
+        case 0:  return !COL0_GetValue(); break;
+        case 1:  return !COL1_GetValue(); break;
+        case 2:  return !COL2_GetValue(); break;
+        case 3:  return !COL3_GetValue(); break;
+        case 4:  return !COL4_GetValue(); break;
+        case 5:  return !COL5_GetValue(); break;
+        case 6:  return !COL6_GetValue(); break;
+        case 7:  return !COL7_GetValue(); break;
+        case 8:  return !COL8_GetValue(); break;
+        case 9:  return !COL9_GetValue(); break;
+        case 10: return !COL10_GetValue(); break;
+        case 11: return !COL11_GetValue(); break;
+        case 12: return !COL12_GetValue(); break;
+        case 13: return !COL13_GetValue(); break;
+        case 14: return !COL14_GetValue(); break;
+        default: return !COL0_GetValue(); break;
     }
 }
