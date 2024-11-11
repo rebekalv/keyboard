@@ -37,6 +37,7 @@
 #include "usb_core.h"
 #include <usb_hid_keycodes.h>
 #include "usb_hid_keyboard.h"
+#include "util/delay.h"
 
 #define MAX_KEY_PRESSES_PER_SECOND 5
 #define KEY_PRESS_TIME_INTERVAL_MS 1000/MAX_KEY_PRESSES_PER_SECOND
@@ -46,11 +47,12 @@
 
 // Button de-bounce variables
 uint64_t milliSeconds = 0;
-uint64_t lastInterruptTime[NUM_COLUMNS] = {0};
+//uint64_t lastInterruptTime[NUM_COLUMNS][NUM_ROWS] = {0};
 
 // Flags to keep track of key presses
-volatile bool keyPressFlag = false;
-volatile bool columnFlags[NUM_COLUMNS] = {false};
+volatile bool buttonChangeFlag[NUM_ROWS][NUM_COLUMNS] = {false};
+volatile bool buttonPressed[NUM_ROWS][NUM_COLUMNS] = {false};
+volatile uint8_t activeRow = 0;
 
 // USB connection variables
 RETURN_CODE_t status;
@@ -61,12 +63,11 @@ volatile uint8_t vbusFlag = false;
 void CheckUSBConnection(void);
 void HandleUSBConnection(void);
 
-// USB callback functions, called every 1 ms
-void IterateRows(void);
-void KeyPressHandler(uint8_t currentRow);
-
-// Check columns for key presses
+// Check columns for key presses, called every 1 ms
 void IterateColumns(void);
+
+// Handles keypresses
+void KeyPressHandler(uint8_t currentRow);
 
 // Helper functions
 void TurnRowOff(uint8_t row);
@@ -75,64 +76,72 @@ uint8_t ColumnIsActive(uint8_t column);
 
 // Key map
 uint8_t keyboard[] = {
-    HID_A, HID_B, HID_C, 
-    HID_D, HID_E, HID_F, 
-    HID_G, HID_H, HID_I, 
-    HID_J, HID_K, HID_L,
+    HID_0, HID_1, HID_2, HID_3, HID_4, HID_5, HID_6, HID_7, HID_8, HID_9, HID_0, HID_KEYPAD_PLUS, HID_BACKSLASH, HID_BACKSPACE, HID_0,
+    HID_0, HID_Q, HID_W, HID_E, HID_R, HID_T, HID_Y, HID_U, HID_I, HID_O, HID_P, HID_0, HID_1, HID_2, HID_3,
+    HID_0, HID_A, HID_S, HID_D, HID_F, HID_G, HID_H, HID_J, HID_K, HID_L, HID_0, HID_1, HID_3, HID_4, HID_5,
+    HID_0, HID_1, HID_Z, HID_X, HID_C, HID_V, HID_B, HID_N, HID_M, HID_COMMA, HID_DOT, HID_UNDERSCORE, HID_0, HID_1, HID_2,
+    HID_0, HID_1, HID_2, HID_3, HID_4, HID_5, HID_6, HID_7, HID_8, HID_9, HID_0, HID_1, HID_2, HID_3, HID_4,
 };
         
 int main(void)
 {
-    USBDevice_StartOfFrameCallbackRegister(IterateRows); // Called every 1 ms
+    USBDevice_StartOfFrameCallbackRegister(IterateColumns); // Called every 1 ms
     SYSTEM_Initialize();
     RTC_SetPITIsrCallback(CheckUSBConnection);
     LED0_SetLow();
-    ROW0_SetLow(); //active low
 
     while(1)
     {
         HandleUSBConnection();
+         
+        // Handle key presses in the activeRow
+        KeyPressHandler(activeRow);
     }    
-}
-
-void IterateRows(void)   // Iterates columns to measure key presses at every Start of Frame
-{
-
-    static volatile uint8_t activeRow = 0;
-    // Increase de-bounce counter
-    milliSeconds++;
-    IterateColumns();
-    // Handle key presses in the activeColumn
-    //TurnRowOn(activeRow);
-    KeyPressHandler(activeRow);
-    // Next column
-    //TurnRowOff(activeRow);
-//    activeRow = (activeRow+1)%NUM_COLUMNS; 
-    return;
 }
 
 void KeyPressHandler(uint8_t currentRow) // Handles key presses
 {
+    static volatile bool keyChangeFlag = false;
     static volatile bool keyDownFlag = true;
     static volatile uint8_t keyboardIndex = -1;
-    static volatile bool modifierFlag = false;
-    // Detects any key presses
-    if (keyPressFlag)
+//    static volatile bool modifierFlag = false;
+    
+    // Detect button change
+    for (uint8_t currentColumn = 0; currentColumn < NUM_COLUMNS; currentColumn++) 
+    {
+        if(buttonChangeFlag[currentRow][currentColumn])
+        {
+            if (buttonPressed[currentRow][currentColumn])
+            {
+                keyDownFlag = true;
+            }else
+            {
+                keyDownFlag = false;
+            }
+            keyboardIndex = currentColumn + currentRow*NUM_COLUMNS;
+            keyChangeFlag = true;
+            buttonChangeFlag[currentRow][currentColumn] = false;
+            break;
+        }
+        keyChangeFlag = false;
+    }
+    
+    if (keyChangeFlag)
     {
         // Checks if we need the key press down event
         if (keyDownFlag)
         {
-            if (modifierFlag == false)
-            {
-                // Finds the message_index corresponding to the pressed key
-                for (uint8_t currentColumn = 0; currentColumn < NUM_COLUMNS; currentColumn++) {
-                    if (columnFlags[currentColumn]) {
-                        keyboardIndex = currentColumn + currentRow*NUM_COLUMNS;
-                        columnFlags[currentColumn] = false;
-                        break;
-                    }
-                }
-            }
+//            if (modifierFlag == false)
+//            {
+//                // Finds the message_index corresponding to the pressed key
+//                for (uint8_t currentColumn = 0; currentColumn < NUM_COLUMNS; currentColumn++) {
+//                    if (buttonPressed[currentRow][currentColumn]) {
+//                        keyboardIndex = currentColumn + currentRow*NUM_COLUMNS;
+//                        buttonPressed[currentRow][currentColumn] = false;
+//                        break;
+//                    }
+//                }
+//            }
 //           
             if (SUCCESS == status)
             {
@@ -145,12 +154,12 @@ void KeyPressHandler(uint8_t currentRow) // Handles key presses
 //                else
 //                {
                     // Sends the keypress down event
-                    status = USB_HIDKeyPressDown(keyboard[keyboardIndex]);
-                    keyDownFlag = false;
-                    modifierFlag = false;
+                status = USB_HIDKeyPressDown(keyboard[keyboardIndex]);
+//                    modifierFlag = false;
 //                }
             }
         }
+         // Key press up event
         else
         {
             if (SUCCESS == status)
@@ -158,30 +167,38 @@ void KeyPressHandler(uint8_t currentRow) // Handles key presses
                 // Sends the keypress up event
                 status = USB_HIDKeyPressUp(keyboard[keyboardIndex]);
                 
-                // Releases the shift key modifier if enabled
-                USB_HIDKeyModifierUp(HID_MODIFIER_LEFT_SHIFT);
-
-                // Resets flags
-                keyDownFlag = true;
-                keyPressFlag = false;
+//                // Releases the shift key modifier if enabled
+//                USB_HIDKeyModifierUp(HID_MODIFIER_LEFT_SHIFT);
             }
         }
     }
 }
 
-void IterateColumns(void){
-    uint64_t currentTime = milliSeconds;
+void IterateColumns(void){  // called every ms
+    
     for (int col=0; col < NUM_COLUMNS; col++){
+        // Check key down event
         if (ColumnIsActive(col)){
-            // Checks if there has been enough time between two equal key presses, to avoid bouncing and fast spamming
-            if (currentTime - lastInterruptTime[col] >= KEY_PRESS_TIME_INTERVAL_MS)
-            {
-                lastInterruptTime[col] = currentTime;
-                keyPressFlag = true;
-                columnFlags[col] = true;
-            }
+                if (buttonPressed[activeRow][col] == false)
+                {
+                    buttonPressed[activeRow][col] = true;
+                    buttonChangeFlag[activeRow][col] = true;
+                }
+        }
+        // Check key up event
+        else if (buttonPressed[activeRow][col] == true)
+        {
+            buttonPressed[activeRow][col] = false;
+            buttonChangeFlag[activeRow][col] = true;
         }
     }
+    
+    // Go to next row
+    TurnRowOff(activeRow);
+    activeRow = (activeRow+1)%NUM_ROWS; 
+    TurnRowOn(activeRow);
+ 
+    return;
 }
 
 void HandleUSBConnection(void) {
@@ -254,7 +271,6 @@ void CheckUSBConnection(void) {
     }
     AC_prevState = AC_currentState;
 }
-
 void TurnRowOff(uint8_t row){
     switch (row) {
         case 0: ROW0_SetHigh(); break;
