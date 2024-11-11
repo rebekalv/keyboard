@@ -45,9 +45,24 @@
 #define NUM_ROWS 5
 #define CONSECUTIVE_EQUAL_PIT_INTERRUPTS 5
 
-// Button de-bounce variables
-uint64_t milliSeconds = 0;
-//uint64_t lastInterruptTime[NUM_COLUMNS][NUM_ROWS] = {0};
+// Norwegian redefines
+#define APOSTROF HID_BACKSLASH
+#define BACKSLASH HID_EQUAL
+#define TWO_DOTS HID_CLOSE_BRACE
+#define AA HID_OPEN_BRACE
+#define OE HID_SEMICOLON    
+#define AE HID_APOSTROPHE
+#define BINDESTREK HID_SLASH
+#define KROKODILLE_TEGN HID_AT102
+
+// Key map
+uint8_t keyboard[] = {
+    HID_ESCAPE, HID_1, HID_2, HID_3, HID_4, HID_5, HID_6, HID_7, HID_8, HID_9, HID_0, HID_KEYPAD_PLUS, BACKSLASH, HID_BACKSPACE, HID_DELETE,
+    HID_TAB, HID_Q, HID_W, HID_E, HID_R, HID_T, HID_Y, HID_U, HID_I, HID_O, HID_P, AA, TWO_DOTS, HID_RETURN, HID_END,
+    HID_1, HID_A, HID_S, HID_D, HID_F, HID_G, HID_H, HID_J, HID_K, HID_L, OE, AE, APOSTROF, HID_0, HID_HOME,
+    HID_1, KROKODILLE_TEGN, HID_Z, HID_X, HID_C, HID_V, HID_B, HID_N, HID_M, HID_COMMA, HID_DOT, BINDESTREK, HID_1, HID_UP, HID_2,
+    HID_1, HID_2, HID_3, HID_0, HID_0, HID_0, HID_SPACEBAR, HID_0, HID_0, HID_1, HID_2, HID_3, HID_LEFT, HID_DOWN, HID_RIGHT,
+};
 
 // Flags to keep track of key presses
 volatile bool buttonChangeFlag[NUM_ROWS][NUM_COLUMNS] = {false};
@@ -74,21 +89,13 @@ void TurnRowOff(uint8_t row);
 void TurnRowOn(uint8_t row);
 uint8_t ColumnIsActive(uint8_t column);
 
-// Key map
-uint8_t keyboard[] = {
-    HID_0, HID_1, HID_2, HID_3, HID_4, HID_5, HID_6, HID_7, HID_8, HID_9, HID_0, HID_KEYPAD_PLUS, HID_BACKSLASH, HID_BACKSPACE, HID_0,
-    HID_0, HID_Q, HID_W, HID_E, HID_R, HID_T, HID_Y, HID_U, HID_I, HID_O, HID_P, HID_0, HID_1, HID_2, HID_3,
-    HID_0, HID_A, HID_S, HID_D, HID_F, HID_G, HID_H, HID_J, HID_K, HID_L, HID_0, HID_1, HID_3, HID_4, HID_5,
-    HID_0, HID_1, HID_Z, HID_X, HID_C, HID_V, HID_B, HID_N, HID_M, HID_COMMA, HID_DOT, HID_UNDERSCORE, HID_0, HID_1, HID_2,
-    HID_0, HID_1, HID_2, HID_3, HID_4, HID_5, HID_6, HID_7, HID_8, HID_9, HID_0, HID_1, HID_2, HID_3, HID_4,
-};
+
         
 int main(void)
 {
     USBDevice_StartOfFrameCallbackRegister(IterateColumns); // Called every 1 ms
     SYSTEM_Initialize();
     RTC_SetPITIsrCallback(CheckUSBConnection);
-    LED0_SetLow();
 
     while(1)
     {
@@ -174,8 +181,9 @@ void KeyPressHandler(uint8_t currentRow) // Handles key presses
     }
 }
 
-void IterateColumns(void){  // called every ms
-    
+void IterateColumns(void) // called every 1 ms
+{  
+    // Iterate columns
     for (int col=0; col < NUM_COLUMNS; col++){
         // Check key down event
         if (ColumnIsActive(col)){
@@ -193,7 +201,7 @@ void IterateColumns(void){  // called every ms
         }
     }
     
-    // Go to next row
+    // Go to the next row
     TurnRowOff(activeRow);
     activeRow = (activeRow+1)%NUM_ROWS; 
     TurnRowOn(activeRow);
