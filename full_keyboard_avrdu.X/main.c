@@ -48,48 +48,56 @@
 // Norwegian redefines
 #define APOSTROF        HID_BACKSLASH
 #define BACKSLASH       HID_EQUAL
+#define STRAIGHT_LINE   HID_GRAVE_TILDE
 #define TWO_DOTS        HID_CLOSE_BRACE
 #define AA              HID_OPEN_BRACE
 #define OE              HID_SEMICOLON    
 #define AE              HID_APOSTROPHE
 #define CROCODILE_SIGN  HID_AT102
-#define WINDOWS         HID_LEFT_GUI            // nothing
+#define WINDOWS         HID_MODIFIER_LEFT_UI       
+#define QUESTION        HID_UNDERSCORE
+
 
 // Modifiers
-#define ALT             HID_MODIFIER_LEFT_ALT   // a
+#define ALT             HID_MODIFIER_LEFT_ALT
 #define CTRL            HID_MODIFIER_LEFT_CTRL
 #define SHIFT_L         HID_MODIFIER_LEFT_SHIFT
-#define SHIFT_R         HID_MODIFIER_RIGHT_SHIFT // 3
+#define SHIFT_R         HID_MODIFIER_RIGHT_SHIFT
+#define ALTGR           HID_MODIFIER_RIGHT_ALT
+#define ALTGR_INDEX     69
 
 // Custom encoding
-#define OPTION_LAYER2   HID_MODIFIER_RIGHT_ALT  //F7
 #define LEDS_UP         HID_KEYPAD_PLUS
 #define LEDS_DOWN       HID_KEYPAD_MINUS
-#define CHANGE_LEDS     HID_RIGHT_GUI
+#define CHANGE_LEDS     HID_RIGHT_GUI       // to be implemented
 #define NONE            HID_KEY_NONE
 
 
 // Key map layer 1
 uint8_t keyboard[] = {
-    HID_ESCAPE, HID_1, HID_2, HID_3, HID_4, HID_5, HID_6, HID_7, HID_8, HID_9, HID_0, HID_KEYPAD_PLUS, BACKSLASH, HID_BACKSPACE, HID_DELETE,
-    HID_TAB, HID_Q, HID_W, HID_E, HID_R, HID_T, HID_Y, HID_U, HID_I, HID_O, HID_P, AA, TWO_DOTS, HID_RETURN, HID_END,
-    HID_CAPS_LOCK, HID_A, HID_S, HID_D, HID_F, HID_G, HID_H, HID_J, HID_K, HID_L, OE, AE, APOSTROF, NONE, HID_HOME,
+    HID_ESCAPE, HID_1, HID_2, HID_3, HID_4, HID_5, HID_6, HID_7, HID_8, HID_9, HID_0, QUESTION, BACKSLASH, HID_BACKSPACE, HID_DELETE,
+    HID_TAB, HID_Q, HID_W, HID_E, HID_R, HID_T, HID_Y, HID_U, HID_I, HID_O, HID_P, AA, TWO_DOTS, HID_RETURN, HID_HOME,
+    HID_CAPS_LOCK, HID_A, HID_S, HID_D, HID_F, HID_G, HID_H, HID_J, HID_K, HID_L, OE, AE, APOSTROF, NONE, HID_END,
     SHIFT_L, CROCODILE_SIGN, HID_Z, HID_X, HID_C, HID_V, HID_B, HID_N, HID_M, HID_COMMA, HID_DOT, HID_SLASH, SHIFT_R, HID_UP, CHANGE_LEDS,
-    CTRL, WINDOWS, ALT, NONE, NONE, NONE, HID_SPACEBAR, NONE, NONE, OPTION_LAYER2, LEDS_DOWN, LEDS_UP, HID_LEFT, HID_DOWN, HID_RIGHT,
+    CTRL, WINDOWS, ALT, NONE, NONE, NONE, HID_SPACEBAR, NONE, NONE, ALTGR, LEDS_DOWN, LEDS_UP, HID_LEFT, HID_DOWN, HID_RIGHT,
 };
 
 // Modifier index list
-const uint8_t modifierIndexes[] = {45, 57, 60, 62};
+const uint8_t modifierIndexes[] = {45, 57, 60, 61, 62, 69};
 const uint8_t numberOfModifiers = sizeof(modifierIndexes) / sizeof(modifierIndexes[0]);
 
 // Keymap layer 2
-//uint8_t layer2[] = {
-//    HID_ESCAPE, HID_1, HID_2, HID_3, HID_4, HID_5, HID_6, HID_7, HID_8, HID_9, HID_0, HID_KEYPAD_PLUS, BACKSLASH, HID_BACKSPACE, HID_DELETE,
-//    HID_TAB, HID_Q, HID_W, HID_E, HID_R, HID_T, HID_Y, HID_U, HID_I, HID_O, HID_P, AA, TWO_DOTS, HID_RETURN, HID_END,
-//    HID_CAPS_LOCK, HID_A, HID_S, HID_D, HID_F, HID_G, HID_H, HID_J, HID_K, HID_L, OE, AE, APOSTROF, HID_0, HID_HOME,
-//    HID_MODIFIER_LEFT_SHIFT, CROCODILE_SIGN, HID_Z, HID_X, HID_C, HID_V, HID_B, HID_N, HID_M, HID_COMMA, HID_DOT, HID_SLASH, HID_1, HID_UP, HID_2,
-//    HID_MODIFIER_LEFT_CTRL, HID_MODIFIER_LEFT_UI, HID_MODIFIER_LEFT_ALT, HID_0, HID_0, HID_0, HID_SPACEBAR, HID_0, HID_0, HID_1, HID_2, HID_3, HID_LEFT, HID_DOWN, HID_RIGHT,
-//};
+uint8_t layer2[] = {
+    NONE, NONE, NONE, NONE, NONE, NONE,  NONE, NONE, NONE, NONE, NONE, STRAIGHT_LINE, NONE, NONE, NONE,
+    NONE, NONE, NONE, NONE, NONE, NONE,  NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
+    NONE, NONE, NONE, NONE, NONE, NONE,  NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
+    NONE, NONE, NONE, NONE, NONE, NONE,  NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
+    NONE, NONE, NONE, NONE, NONE, NONE,  NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
+};
+
+// Layer 2 index list
+const uint8_t customIndexes[] = {11};
+const uint8_t numberOfCustomIndexes = sizeof(customIndexes) / sizeof(customIndexes[0]);
 
 // Flags to keep track of key presses
 volatile bool buttonChangeFlag[NUM_ROWS][NUM_COLUMNS] = {false};
@@ -116,6 +124,8 @@ void TurnRowOff(uint8_t row);
 void TurnRowOn(uint8_t row);
 uint8_t ColumnIsActive(uint8_t column);
 bool IsModifierIndex(uint8_t index);
+bool IsCustomIndex(uint8_t index);
+
        
 int main(void)
 {
@@ -137,7 +147,9 @@ void KeyPressHandler(uint8_t currentRow) // Handles key presses
     static volatile bool keyChangeFlag = false;
     static volatile bool keyDownFlag = true;
     static volatile uint8_t keyboardIndex = -1;
-    static volatile bool modifierFlag = false;
+    static volatile bool altgrActive = false;
+    static volatile bool skip = false;
+
     
     // Detect button change
     for (uint8_t currentColumn = 0; currentColumn < NUM_COLUMNS; currentColumn++) 
@@ -166,15 +178,27 @@ void KeyPressHandler(uint8_t currentRow) // Handles key presses
         {
             if (SUCCESS == status)
             {
-                if ((modifierFlag == false) && IsModifierIndex(keyboardIndex))
+                if (IsModifierIndex(keyboardIndex))
                 {
                     status = USB_HIDKeyModifierDown(keyboard[keyboardIndex]);
-                    modifierFlag = true;
+                    if(keyboardIndex == ALTGR_INDEX)
+                    {
+                        altgrActive = true;
+                    }
                 }
                 else
                 {
                   // Sends the keypress down event
-                    status = USB_HIDKeyPressDown(keyboard[keyboardIndex]);
+                    if(altgrActive && IsCustomIndex(keyboardIndex))
+                    {
+                        LED0_SetHigh();
+                        status = USB_HIDKeyModifierUp(ALTGR);
+                        status = USB_HIDKeyPressDown(layer2[keyboardIndex]);
+                    }
+                    else
+                    {
+                        status = USB_HIDKeyPressDown(keyboard[keyboardIndex]);
+                    }
                 }
             }
         }
@@ -183,15 +207,30 @@ void KeyPressHandler(uint8_t currentRow) // Handles key presses
         {
             if (SUCCESS == status)
             {
-                 if((modifierFlag == true) && IsModifierIndex(keyboardIndex))
+                if(altgrActive && IsCustomIndex(keyboardIndex))
                 {
-                    status = USB_HIDKeyModifierUp(keyboard[keyboardIndex]);
-                    modifierFlag = false;
-                }
-                else
+                    status = USB_HIDKeyPressUp(layer2[keyboardIndex]);
+                    skip = true;
+                }else
                 {
-                  // Sends the keypress up event
-                   status = USB_HIDKeyPressUp(keyboard[keyboardIndex]);
+                    if(IsModifierIndex(keyboardIndex))
+                    {
+                        if((keyboardIndex == ALTGR_INDEX) && (skip))
+                        {
+                            altgrActive = false;
+                            skip = false;
+                            LED0_SetLow();
+                        }
+                        else
+                        {
+                            status = USB_HIDKeyModifierUp(keyboard[keyboardIndex]);
+                        }
+                    }
+                    else
+                    {
+                      // Sends the keypress up event
+                       status = USB_HIDKeyPressUp(keyboard[keyboardIndex]);
+                    }
                 }
             }
         }
@@ -338,6 +377,14 @@ uint8_t ColumnIsActive(uint8_t column){
 bool IsModifierIndex(uint8_t index) {
     for (uint8_t i = 0; i < numberOfModifiers; i++) {
         if (index == modifierIndexes[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+bool IsCustomIndex(uint8_t index) {
+    for (uint8_t i = 0; i < numberOfCustomIndexes; i++) {
+        if (index == customIndexes[i]) {
             return true;
         }
     }
