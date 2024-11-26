@@ -46,23 +46,50 @@
 #define CONSECUTIVE_EQUAL_PIT_INTERRUPTS 5
 
 // Norwegian redefines
-#define APOSTROF HID_BACKSLASH
-#define BACKSLASH HID_EQUAL
-#define TWO_DOTS HID_CLOSE_BRACE
-#define AA HID_OPEN_BRACE
-#define OE HID_SEMICOLON    
-#define AE HID_APOSTROPHE
-#define BINDESTREK HID_SLASH
-#define KROKODILLE_TEGN HID_AT102
+#define APOSTROF        HID_BACKSLASH
+#define BACKSLASH       HID_EQUAL
+#define TWO_DOTS        HID_CLOSE_BRACE
+#define AA              HID_OPEN_BRACE
+#define OE              HID_SEMICOLON    
+#define AE              HID_APOSTROPHE
+#define CROCODILE_SIGN  HID_AT102
+#define WINDOWS         HID_LEFT_GUI            // nothing
 
-// Key map
+// Modifiers
+#define ALT             HID_MODIFIER_LEFT_ALT   // a
+#define CTRL            HID_MODIFIER_LEFT_CTRL
+#define SHIFT_L         HID_MODIFIER_LEFT_SHIFT
+#define SHIFT_R         HID_MODIFIER_RIGHT_SHIFT // 3
+
+// Custom encoding
+#define OPTION_LAYER2   HID_MODIFIER_RIGHT_ALT  //F7
+#define LEDS_UP         HID_KEYPAD_PLUS
+#define LEDS_DOWN       HID_KEYPAD_MINUS
+#define CHANGE_LEDS     HID_RIGHT_GUI
+#define NONE            HID_KEY_NONE
+
+
+// Key map layer 1
 uint8_t keyboard[] = {
     HID_ESCAPE, HID_1, HID_2, HID_3, HID_4, HID_5, HID_6, HID_7, HID_8, HID_9, HID_0, HID_KEYPAD_PLUS, BACKSLASH, HID_BACKSPACE, HID_DELETE,
     HID_TAB, HID_Q, HID_W, HID_E, HID_R, HID_T, HID_Y, HID_U, HID_I, HID_O, HID_P, AA, TWO_DOTS, HID_RETURN, HID_END,
-    HID_1, HID_A, HID_S, HID_D, HID_F, HID_G, HID_H, HID_J, HID_K, HID_L, OE, AE, APOSTROF, HID_0, HID_HOME,
-    HID_1, KROKODILLE_TEGN, HID_Z, HID_X, HID_C, HID_V, HID_B, HID_N, HID_M, HID_COMMA, HID_DOT, BINDESTREK, HID_1, HID_UP, HID_2,
-    HID_1, HID_2, HID_3, HID_0, HID_0, HID_0, HID_SPACEBAR, HID_0, HID_0, HID_1, HID_2, HID_3, HID_LEFT, HID_DOWN, HID_RIGHT,
+    HID_CAPS_LOCK, HID_A, HID_S, HID_D, HID_F, HID_G, HID_H, HID_J, HID_K, HID_L, OE, AE, APOSTROF, NONE, HID_HOME,
+    SHIFT_L, CROCODILE_SIGN, HID_Z, HID_X, HID_C, HID_V, HID_B, HID_N, HID_M, HID_COMMA, HID_DOT, HID_SLASH, SHIFT_R, HID_UP, CHANGE_LEDS,
+    CTRL, WINDOWS, ALT, NONE, NONE, NONE, HID_SPACEBAR, NONE, NONE, OPTION_LAYER2, LEDS_DOWN, LEDS_UP, HID_LEFT, HID_DOWN, HID_RIGHT,
 };
+
+// Modifier index list
+const uint8_t modifierIndexes[] = {45, 57, 60, 62};
+const uint8_t numberOfModifiers = sizeof(modifierIndexes) / sizeof(modifierIndexes[0]);
+
+// Keymap layer 2
+//uint8_t layer2[] = {
+//    HID_ESCAPE, HID_1, HID_2, HID_3, HID_4, HID_5, HID_6, HID_7, HID_8, HID_9, HID_0, HID_KEYPAD_PLUS, BACKSLASH, HID_BACKSPACE, HID_DELETE,
+//    HID_TAB, HID_Q, HID_W, HID_E, HID_R, HID_T, HID_Y, HID_U, HID_I, HID_O, HID_P, AA, TWO_DOTS, HID_RETURN, HID_END,
+//    HID_CAPS_LOCK, HID_A, HID_S, HID_D, HID_F, HID_G, HID_H, HID_J, HID_K, HID_L, OE, AE, APOSTROF, HID_0, HID_HOME,
+//    HID_MODIFIER_LEFT_SHIFT, CROCODILE_SIGN, HID_Z, HID_X, HID_C, HID_V, HID_B, HID_N, HID_M, HID_COMMA, HID_DOT, HID_SLASH, HID_1, HID_UP, HID_2,
+//    HID_MODIFIER_LEFT_CTRL, HID_MODIFIER_LEFT_UI, HID_MODIFIER_LEFT_ALT, HID_0, HID_0, HID_0, HID_SPACEBAR, HID_0, HID_0, HID_1, HID_2, HID_3, HID_LEFT, HID_DOWN, HID_RIGHT,
+//};
 
 // Flags to keep track of key presses
 volatile bool buttonChangeFlag[NUM_ROWS][NUM_COLUMNS] = {false};
@@ -88,9 +115,8 @@ void KeyPressHandler(uint8_t currentRow);
 void TurnRowOff(uint8_t row);
 void TurnRowOn(uint8_t row);
 uint8_t ColumnIsActive(uint8_t column);
-
-
-        
+bool IsModifierIndex(uint8_t index);
+       
 int main(void)
 {
     USBDevice_StartOfFrameCallbackRegister(IterateColumns); // Called every 1 ms
@@ -111,7 +137,7 @@ void KeyPressHandler(uint8_t currentRow) // Handles key presses
     static volatile bool keyChangeFlag = false;
     static volatile bool keyDownFlag = true;
     static volatile uint8_t keyboardIndex = -1;
-//    static volatile bool modifierFlag = false;
+    static volatile bool modifierFlag = false;
     
     // Detect button change
     for (uint8_t currentColumn = 0; currentColumn < NUM_COLUMNS; currentColumn++) 
@@ -138,32 +164,18 @@ void KeyPressHandler(uint8_t currentRow) // Handles key presses
         // Checks if we need the key press down event
         if (keyDownFlag)
         {
-//            if (modifierFlag == false)
-//            {
-//                // Finds the message_index corresponding to the pressed key
-//                for (uint8_t currentColumn = 0; currentColumn < NUM_COLUMNS; currentColumn++) {
-//                    if (buttonPressed[currentRow][currentColumn]) {
-//                        keyboardIndex = currentColumn + currentRow*NUM_COLUMNS;
-//                        buttonPressed[currentRow][currentColumn] = false;
-//                        break;
-//                    }
-//                }
-//            }
-//           
             if (SUCCESS == status)
             {
-//                // Used to make exclamation mark at the end of the message
-//                if ((keypadIndex == 11) && (modifierFlag == false))
-//                {
-//                    status = USB_HIDKeyModifierDown(HID_MODIFIER_LEFT_SHIFT);
-//                    modifierFlag = true;
-//                }
-//                else
-//                {
-                    // Sends the keypress down event
-                status = USB_HIDKeyPressDown(keyboard[keyboardIndex]);
-//                    modifierFlag = false;
-//                }
+                if ((modifierFlag == false) && IsModifierIndex(keyboardIndex))
+                {
+                    status = USB_HIDKeyModifierDown(keyboard[keyboardIndex]);
+                    modifierFlag = true;
+                }
+                else
+                {
+                  // Sends the keypress down event
+                    status = USB_HIDKeyPressDown(keyboard[keyboardIndex]);
+                }
             }
         }
          // Key press up event
@@ -171,11 +183,16 @@ void KeyPressHandler(uint8_t currentRow) // Handles key presses
         {
             if (SUCCESS == status)
             {
-                // Sends the keypress up event
-                status = USB_HIDKeyPressUp(keyboard[keyboardIndex]);
-                
-//                // Releases the shift key modifier if enabled
-//                USB_HIDKeyModifierUp(HID_MODIFIER_LEFT_SHIFT);
+                 if((modifierFlag == true) && IsModifierIndex(keyboardIndex))
+                {
+                    status = USB_HIDKeyModifierUp(keyboard[keyboardIndex]);
+                    modifierFlag = false;
+                }
+                else
+                {
+                  // Sends the keypress up event
+                   status = USB_HIDKeyPressUp(keyboard[keyboardIndex]);
+                }
             }
         }
     }
@@ -208,7 +225,6 @@ void IterateColumns(void) // called every 1 ms
  
     return;
 }
-
 void HandleUSBConnection(void) {
     // Check if VBUS was true last check, indicating that USB was connected
     if (prevVbusState == true)
@@ -318,4 +334,12 @@ uint8_t ColumnIsActive(uint8_t column){
         case 14: return !COL14_GetValue(); break;
         default: return !COL0_GetValue(); break;
     }
+}
+bool IsModifierIndex(uint8_t index) {
+    for (uint8_t i = 0; i < numberOfModifiers; i++) {
+        if (index == modifierIndexes[i]) {
+            return true;
+        }
+    }
+    return false;
 }
