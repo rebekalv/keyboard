@@ -57,4 +57,4 @@ dkms.conf
 # Kicad
 *.kicad_prl
 fp-info-cache
-*keyboard1-backups/
+*pcb_design-backups/
