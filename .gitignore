@@ -53,3 +53,8 @@ dkms.conf
 
 # Mac
 *.DS_Store
+
+# Kicad
+*.kicad_prl
+fp-info-cache
+*pcb_design-backups/
