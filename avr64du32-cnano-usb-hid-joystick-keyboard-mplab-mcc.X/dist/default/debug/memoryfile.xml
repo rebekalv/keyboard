@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<project>                                  
+  <executable name="dist/default/debug/avr64du32-cnano-usb-hid-joystick-keyboard-mplab-mcc.X.debug.elf">                 
+    <memory name="program">              
+      <units>bytes</units>                 
+      <length>65536</length>                 
+      <used>15861</used>                     
+      <free>49675</free>                     
+    </memory>                              
+    <memory name="data">                 
+      <units>bytes</units>                 
+      <length>8192</length>                 
+      <used>531</used>                     
+      <free>7661</free>                     
+    </memory>                              
+  </executable>                            
+</project>                                 

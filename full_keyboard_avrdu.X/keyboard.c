@@ -5,7 +5,6 @@
  * Created on 26. november 2024, 15:53
  */
 
-
 #include "keyboard.h"
 
 // Key map layer 1
