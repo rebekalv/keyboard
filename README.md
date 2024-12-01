@@ -174,3 +174,6 @@ For special characters, modifiers can be used (shift and ctrl). In my code I che
 
 ### Case Design
 In progress :)
+
+### Conclusion
+Now you know how to create a custom, matrix keyboard using an AVR64DU32 Curiosity Nano. By using the USB-C HID class, our keyboard communicates directly with the computer and wiring was simplified using a custom made PCB. LEDs were included under each key and what is missing is to create a fitting case for the keyboard.

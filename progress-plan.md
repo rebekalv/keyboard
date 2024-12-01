@@ -1,5 +1,5 @@
 # Custom Keyboard TFE4205
-The goal of this course is to create a custom, matrix keyboard using two AVR64DU32 Curiosity Nanos. Each AVR should be able to communicate directly with the computer through the USB-C Human Interface Device (HID) class. The usage of a custom made PCB will simplify the wiring, creating a seamless design. In addition, I aim to include LEDs under each key and to create a fitting case for the keyboard, either through 3D printing or through laser cutting. There is the option of 3D printing or laser cutting keycaps, instead of buying them, that I will look into.
+The goal of this course is to create a custom, matrix keyboard using an AVR64DU32 Curiosity Nano. The keyboard should be able to communicate directly with the computer through the USB-C Human Interface Device (HID) class. The usage of a custom made PCB will simplify the wiring, creating a seamless design. In addition, I aim to include LEDs under each key and to create a fitting case for the keyboard, either through 3D printing or through laser cutting.
 
 ## Learning Goals
     PCB design
@@ -12,7 +12,7 @@ The goal of this course is to create a custom, matrix keyboard using two AVR64DU
 
 ## Progress Plan
     1. Create button layout
-    2. Plan AVR pins and connections: I2C?
+    2. Plan AVR pins and connections
     3. Decide size of switches with led holes
     4. Design PCB with diodes and leds: white
     5. Solder the PCB, leds, diodes, and switches
