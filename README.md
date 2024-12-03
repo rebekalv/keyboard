@@ -63,7 +63,7 @@ When your design is ready, you will need the outline of the keyboard for the pcb
 <img src="images/keyboard_outline.png" alt="keyboard outline" width="400"/>
 
 ### AVR Pin Setup
-The important thing in this step is to map out how many pins your keyboard needs, and if your microcontroller can provide that. My keyboard needs 5 rows and 15 columns, hence 20 pins. Looking at pinout on the [cnano website](https://www.microchip.com/en-us/development-tool/ev59f82a), it has 24 port pins. Excluding the usb detect, LED control and degubber LED pin, we are left with 21 available pins, which is enough for our keyboard.
+The important thing in this step is to map out how many pins your keyboard needs, and if your microcontroller can provide that. My keyboard needs 5 rows and 15 columns, hence 20 pins. Looking at pinout on the [cnano website](https://www.microchip.com/en-us/development-tool/ev59f82a), it has 24 port pins. Excluding the usb detect, LED control and debugger LED pin, we are left with 21 available pins, which is enough for our keyboard.
 
 <img src="keyboard_layout/marked_keyboard_20pins.png" alt="keyboard columns and rows" width="400"/>
 
@@ -171,6 +171,9 @@ void KeyPressHandler(uint8_t currentRow)
 ```
 
 For special characters, modifiers can be used (shift and ctrl). In my code I check if a keypress corresponds to a modifier and then send the modifier down or up event. 
+
+### LED Integration
+I used the usart0 in the AVR in spi mode, to create a pulse-width modulated signal for neopixel LEDs. This will be used later to control the color scheme of the LEDs, but is for now on hold.
 
 ### Case Design
 In progress :)
