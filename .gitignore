@@ -58,15 +58,17 @@ dkms.conf
 *.kicad_prl
 fp-info-cache
 *pcb_design-backups/
+/full_keyboard_avrdu.X/build/
 
-# MPLAB
-**/build/*
-**/queuelogs/*
-**/nbproject/*
-!**/nbproject/*.xml
-**/dist/*
-**/.generated_files/*
-**/defmplabxtrace.log
-**/defmplabxtrace.log.inx
-/mcc-manifest-autosave.yml
-/mcc-manifest-generated-success.yml
+# MPLAB project files
+/**/build/*
+/**/queuelogs/*
+/**/nbproject/*
+!/**/nbproject/*.xml
+/**/dist/*
+/**/debug/*
+/**/.generated_files/*
+
+*.bak*
+*.yml
+*.log
