@@ -22,7 +22,7 @@ const uint8_t numberOfModifiers = sizeof(modifierIndexes) / sizeof(modifierIndex
 
 // Keymap layer 2
 const uint8_t layer2[] = {
-    NONE, NONE, NONE, NONE, NONE, NONE,  NONE, NONE, NONE, NONE, NONE, STRAIGHT_LINE, NONE, NONE, NONE,
+    NONE, NONE, NONE, NONE, NONE, NONE,  NONE, NONE, NONE, NONE, NONE, BACKSLASH, STRAIGHT_LINE, NONE, NONE,
     NONE, NONE, NONE, NONE, NONE, NONE,  NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
     NONE, NONE, NONE, NONE, NONE, NONE,  NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
     NONE, NONE, NONE, NONE, NONE, NONE,  NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE, NONE,
@@ -30,7 +30,7 @@ const uint8_t layer2[] = {
 };
 
 // Layer 2 index list
-const uint8_t customIndexes[] = {11};
+const uint8_t customIndexes[] = {11,12};
 const uint8_t numberOfCustomIndexes = sizeof(customIndexes) / sizeof(customIndexes[0]);
 
 bool IsModifierIndex(uint8_t index) {

@@ -112,6 +112,10 @@ void KeyUpEvent(void)
             if(IsModifierIndex(keyboardIndex))
             {
                 status = USB_HIDKeyModifierUp(keyboard[keyboardIndex]);
+                if(keyboardIndex == ALTGR_INDEX)
+                {
+                    layer2Active = false;
+                }
             }
             else
             {
