@@ -1,4 +1,4 @@
-# 🚀 Build Your Dream Mechanical LED Keyboard with AVR! 🌟
+# 🚀 Build Your Dream Mechanical LED Keyboard with AVR DU! 🌟
 
 Ever wanted to craft your own custom mechanical keyboard? Here's how I brought mine to life, step-by-step! 🛠️✨
 
