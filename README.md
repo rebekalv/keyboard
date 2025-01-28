@@ -179,11 +179,11 @@ I used the usart0 in the AVR in spi mode, to create a pulse-width modulated sign
 ### Case Design
 The keyboard now has a home! I designed an awesome 3D keyboard case that’s both practical and fun 🎉. It’s split into five pieces to fit my 3D printer 🖨️ and is super easy to assemble. All the 3D modules are available in the 3D_keyboard_case folder as .stl files, ready to print in any color you want! 🛠️ For the creative minds, I’ve included the original DesignSpark Mechanical file 🖌️, so you can tweak, customize, or modify it using their 3D modeling software. Whether you glue it together, enhance it further, or leave it as is, this case is ready to elevate your keyboard project! 🚀🌈
 
-* Keyboard case top
+- Keyboard case top
 <img src="images/3D_case_top.png" alt="3d front" width="500"/>
-* Keyboard case bottom
+- Keyboard case bottom
 <img src="images/3D_case_bottom.png" alt="3d back" width="500"/>
-* Keyboard case tilted support
+- Keyboard case tilted support
 <img src="images/3D_case_support.png" alt="3d back" width="350"/>
 
 ### Conclusion
