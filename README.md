@@ -24,8 +24,9 @@ Ever wanted to craft your own custom mechanical keyboard? Here's how I brought m
      <img src="images/wrong_led.png" alt="wrong leds" height="200"/>
      <img src="images/correct_led.png" alt="correct leds" height="200"/>
 
-- **Case in Progress 🏗️:**  
-  Next step: Designing the perfect case. Will it be 3D-printed or laser-cut? Stay tuned—this keyboard's journey isn’t over yet!
+- **Custom 3D-Printed Case 🎨:**  
+  The case is here! Designed with simplicity and style, it’s split into five parts for easy 3D printing 🖨️. All .stl files are in the 3D_keyboard_case folder, ready to print and assemble.
+    <img src="images/3D_case_full.jpg" alt="3D case" width="400"/>
 
 ---
 
@@ -49,7 +50,7 @@ Ready to create your own masterpiece? Let's type into the future! 🚀
 5. 🔧 [**Assembly:**](#assembly) Solder components onto the PCB.
 6. 💻 [**Firmware Development:**](#firmware-development) Program the AVR for matrix scanning.
 7. 🌈 **LED Integration:** Synchronize lighting with the firmware. (Suspended untill new pcb)
-8. 🏗️ **Case Design:** Plan and create a custom case through 3D printing or laser cutting.
+8. 🏗️ [**Case Design:**](#case-design) Plan and 3D print your custom keyboard case
 9. 📚 **Document Everything:** Share your journey and insights.
 
 
@@ -92,9 +93,9 @@ In KiCad, you’ll start by creating a clear and accurate schematic. This is the
 
 In my schematics, I connected all my switches and diodes and assigned them rows and columns as described in the keyboard outline. Further, I designed a symbol for the avrdu cnano, with the pinout corresponding to the datasheet. I connected the rows and columns to available port pins, and the grounds, voltages and led pin to their corresponding pins.
 
-<img src="images/schema_matrix.png" alt="switch matrix" height="150"/>
-<img src="images/schema_avr.png" alt="avr schema" height="150"/>
-<img src="images/schema_leds.png" alt="led schema" height="150"/>
+<img src="images/schema_matrix.png" alt="switch matrix" height="300"/>
+<img src="images/schema_avr.png" alt="avr schema" height="300"/>
+<img src="images/schema_leds.png" alt="led schema" height="300"/>
 
 
 #### PCB and 3D model
@@ -176,7 +177,14 @@ For special characters, modifiers can be used (shift and ctrl). In my code I che
 I used the usart0 in the AVR in spi mode, to create a pulse-width modulated signal for neopixel LEDs. This will be used later to control the color scheme of the LEDs, but is for now on hold.
 
 ### Case Design
-In progress :)
+The keyboard now has a home! I designed an awesome 3D keyboard case that’s both practical and fun 🎉. It’s split into five pieces to fit my 3D printer 🖨️ and is super easy to assemble. All the 3D modules are available in the 3D_keyboard_case folder as .stl files, ready to print in any color you want! 🛠️ For the creative minds, I’ve included the original DesignSpark Mechanical file 🖌️, so you can tweak, customize, or modify it using their 3D modeling software. Whether you glue it together, enhance it further, or leave it as is, this case is ready to elevate your keyboard project! 🚀🌈
+
+* Keyboard case top
+<img src="images/3D_case_top.png" alt="3d front" width="500"/>
+* Keyboard case bottom
+<img src="images/3D_case_bottom.png" alt="3d back" width="500"/>
+* Keyboard case tilted support
+<img src="images/3D_case_support.png" alt="3d back" width="350"/>
 
 ### Conclusion
 Now you know how to create a custom, matrix keyboard using an AVR64DU32 Curiosity Nano. By using the USB-C HID class, our keyboard communicates directly with the computer and wiring was simplified using a custom made PCB. LEDs were included under each key and what is missing is to create a fitting case for the keyboard.
