@@ -2,10 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/M70309/Documents/Keyboard/keyboard/full_keyboard_avrdu.X/keyboard.c</file>
-            <file>file:/C:/Users/M70309/Documents/Keyboard/keyboard/full_keyboard_avrdu.X/keyboard.h</file>
-            <file>file:/C:/Users/M70309/Documents/Keyboard/keyboard/full_keyboard_avrdu.X/mcc_generated_files/usb/usb_hid/usb_hid_keycodes.h</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
