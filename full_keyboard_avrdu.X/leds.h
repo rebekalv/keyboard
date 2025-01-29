@@ -47,19 +47,6 @@ typedef union {
 	uint8_t array[3];   // [g, r, b]
 } color_t;
 
-// Color codes
-#define PINK        (color_t){.r = 0x78, .g = 0x10, .b = 0x10} 
-#define YELLOW      (color_t){.r = 0x58, .g = 0x20, .b = 0x2} 
-#define RED         (color_t){.r = 0x40, .g = 0, .b = 0}
-#define BLUE        (color_t){.r = 0, .g = 0, .b = 0x40}
-#define WHITE       (color_t){.r = 0x40, .g = 0x30, .b = 0x30}
-#define GREEN       (color_t){.r = 0, .g = 0x40, .b = 0}
-#define BLANK       (color_t){.r = 0, .g = 0, .b = 0}
-
 void LEDS_Init(void);
-void LEDS_PlayAnimation(void);
-void LEDS_ButtonWave(void);
-void LEDS_Single(color_t color);
-
 
 #endif	/* LEDS_H */
