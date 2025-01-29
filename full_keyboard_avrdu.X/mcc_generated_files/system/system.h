@@ -12,7 +12,7 @@
  * @version Package Version 4.2.14
 */
 /*
-© [2024] Microchip Technology Inc. and its subsidiaries.
+© [2025] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -46,6 +46,7 @@ extern "C" {
 #include "../usb/usb0.h"
 #include "../ac/ac0.h"
 #include "../timer/rtc.h"
+#include "../peripheral/usart0.h"
 #include "../vref/vref.h"
 #include "../usb/usb_device.h"
 #include "../system/interrupt.h"

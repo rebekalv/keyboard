@@ -1,15 +1,3 @@
-/**
- * Interrupt Manager Generated Driver API Header File.
- * 
- * @file interrupt.h
- * 
- * @defgroup interrupt INTERRUPT
- * 
- * @brief This file contains the API prototype for the Interrupt Manager.
- *
- * @version Interrupt Manager Driver Version 1.0.0
-*/
-
 /*
 © [2025] Microchip Technology Inc. and its subsidiaries.
 
@@ -31,27 +19,34 @@
     THIS SOFTWARE.
 */
 
+#include <xc.h>
 
-#ifndef INTERRUPT_H
-#define INTERRUPT_H
+// Set the USART0 module to the options selected in the user interface.
 
-#include "../system/utils/compiler.h"
-#include "ccp.h"
-#include "../system/utils/atomic.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif 
-
-/**
- * @ingroup interrupt
- * @brief Initializes the Interrupt module.
- * @retval 0 - Initialization is successful.
- */
-int8_t CPUINT_Initialize();
-
-#ifdef __cplusplus
+int8_t USART0_Initialize(void) {
+    // BAUD 128; 
+    USART0.BAUD = 0x80;
+    // RXCIE disabled; TXCIE enabled; DREIE disabled; RXSIE disabled; LBME disabled; ABEIE disabled; RS485 DISABLE; 
+    USART0.CTRLA = 0x40;
+    // RXEN disabled; TXEN disabled; SFDEN disabled; ODME disabled; RXMODE NORMAL; MPCM disabled; 
+    USART0.CTRLB = 0x0;
+    // CMODE MSPI; PMODE DISABLED; SBMODE 1BIT; CHSIZE 5BIT; UDORD disabled; UCPHA disabled; 
+    USART0.CTRLC = 0xC0;
+    // ABW WDW0; 
+    USART0.CTRLD = 0x0;
+    // DBGRUN disabled; 
+    USART0.DBGCTRL = 0x0;
+    // IREI disabled; 
+    USART0.EVCTRL = 0x0;
+    // RXPL 0x0; 
+    USART0.RXPLCTRL = 0x0;
+    // TXCIF disabled; RXSIF disabled; ISFIF disabled; BDF disabled; WFB disabled; 
+    USART0.STATUS = 0x20;
+    // DATA8 disabled; 
+    USART0.TXDATAH = 0x0;
+    // DATA 0x0; 
+    USART0.TXDATAL = 0x0;
+    // TXPL 0x0; 
+    USART0.TXPLCTRL = 0x0;
+    return 0;
 }
-#endif
-
-#endif /* INTERRUPT_H */

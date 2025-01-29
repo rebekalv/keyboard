@@ -12,7 +12,7 @@
  * @version Package Version 4.2.14
 */
 /*
-© [2024] Microchip Technology Inc. and its subsidiaries.
+© [2025] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -42,6 +42,7 @@ void SYSTEM_Initialize(void)
     USB0_Initialize();
     AC0_Initialize();
     RTC_Initialize();
+    USART0_Initialize();
     VREF_Initialize();
     USBDevice_Initialize();
     CPUINT_Initialize();

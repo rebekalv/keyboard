@@ -10,7 +10,7 @@
  * @version USB_DEVICE_STACK Driver Version 1.0.0
 */
 /*
-© [2024] Microchip Technology Inc. and its subsidiaries.
+© [2025] Microchip Technology Inc. and its subsidiaries.
 
     Subject to your compliance with these terms, you may use Microchip 
     software and any derivatives exclusively with Microchip products. 
@@ -80,8 +80,8 @@ static USB_DEVICE_DESCRIPTOR_t deviceDescriptor = {
     .bDeviceSubClass = 0x00,            // Not defined in Device Descriptor level
     .bDeviceProtocol = 0x00,            // Not defined in Device Descriptor level
     .bMaxPacketSize0 = USB_EP0_SIZE,    // EP0 size
-    .idVendor = 0x04D8,            // MCHP VID
-    .idProduct = 0x0B12,          // PID 0x0010-0x002F reserved for testing/non-public demos
+    .idVendor = 0x0420,            // VID
+    .idProduct = 0x0B20,          // PID 0x0010-0x002F reserved for testing/non-public demos
     .bcdDevice = 0x0110,   // 01.1.0,
     .iManufacturer = 0x01,              // String index 1
     .iProduct = 0x02,                   // String index 2

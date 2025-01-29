@@ -1,15 +1,3 @@
-/**
- * Interrupt Manager Generated Driver API Header File.
- * 
- * @file interrupt.h
- * 
- * @defgroup interrupt INTERRUPT
- * 
- * @brief This file contains the API prototype for the Interrupt Manager.
- *
- * @version Interrupt Manager Driver Version 1.0.0
-*/
-
 /*
 © [2025] Microchip Technology Inc. and its subsidiaries.
 
@@ -31,27 +19,6 @@
     THIS SOFTWARE.
 */
 
-
-#ifndef INTERRUPT_H
-#define INTERRUPT_H
-
 #include "../system/utils/compiler.h"
-#include "ccp.h"
-#include "../system/utils/atomic.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif 
-
-/**
- * @ingroup interrupt
- * @brief Initializes the Interrupt module.
- * @retval 0 - Initialization is successful.
- */
-int8_t CPUINT_Initialize();
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* INTERRUPT_H */
+int8_t USART0_Initialize(void);
